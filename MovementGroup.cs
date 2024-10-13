@@ -28,5 +28,11 @@ namespace ECS.Modules.Exerussus.Movement
         {
             if (Settings.HasMoveProcess && Settings.Update == UpdateType.FixedUpdate) fixedUpdateSystems.Add(new MovementSystem());
         }
+        
+        public MovementGroup SetUpdateType(UpdateType updateType)
+        {
+            Settings.Update = updateType;
+            return this;
+        }
     }
 }
