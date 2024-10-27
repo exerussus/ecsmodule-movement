@@ -34,5 +34,11 @@ namespace ECS.Modules.Exerussus.Movement
             Settings.Update = updateType;
             return this;
         }
+        
+        public MovementGroup SetMoveProcess(bool isEnabled)
+        {
+            Settings.HasMoveProcess = isEnabled;
+            return this;
+        }
     }
 }
