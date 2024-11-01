@@ -7,7 +7,7 @@ namespace ECS.Modules.Exerussus.Movement
 {
     public class MovementPooler : IGroupPooler
     {
-        public void Initialize(EcsWorld world)
+        public virtual void Initialize(EcsWorld world)
         {
             Position = new PoolerModule<MovementData.Position>(world);
             Speed = new PoolerModule<MovementData.Speed>(world);
