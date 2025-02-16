@@ -1,43 +1,72 @@
-﻿using ECS.Modules.Exerussus.Movement.Systems;
+﻿using System;
+using ECS.Modules.Exerussus.Movement.Systems;
 using Exerussus._1EasyEcs.Scripts.Core;
 using Exerussus._1EasyEcs.Scripts.Custom;
+using Exerussus.EasyEcsModules.BasicData;
 using Leopotam.EcsLite;
 
 namespace ECS.Modules.Exerussus.Movement
 {
     public class MovementGroup : EcsGroup<MovementPooler>
     {
-        public MovementSettings Settings = new();
+        public MovementSettings Settings;
 
         protected override void SetInitSystems(IEcsSystems initSystems)
         {
-            if (!Settings.HasMoveProcess) initSystems.Add(new MovementSystem());
+#if UNITY_EDITOR
+            if (Settings == null) throw new Exception("EASY ECS | MOVEMENT GROUP | SETTINGS NOT ASSIGNED.");
+            if (Settings.SystemUpdateDelay > Settings.EntityUpdateDelay) throw new Exception("EASY ECS | MOVEMENT GROUP | SystemUpdateDelay more then EntityUpdateDelay.");
+#endif
         }
 
         protected override void SetUpdateSystems(IEcsSystems updateSystems)
         {
-            if (Settings.HasMoveProcess && Settings.Update == UpdateType.Update) updateSystems.Add(new MovementSystem());
+            if (Settings.Update != UpdateType.Update) return;
+
+            switch (Settings.MovementMode)
+            {
+                case MovementMode.Move:
+                    updateSystems.Add(new MovementSystem { UpdateDelay = Settings.SystemUpdateDelay });
+                    break;
+                case MovementMode.TransformRelay:
+                    updateSystems.Add(new RelaySystem { UpdateDelay = Settings.SystemUpdateDelay });
+                    break;
+            }
         }
 
         protected override void SetLateUpdateSystems(IEcsSystems lateUpdateSystems)
         {
-            if (Settings.HasMoveProcess && Settings.Update == UpdateType.LateUpdate) lateUpdateSystems.Add(new MovementSystem());
+            if (Settings.Update != UpdateType.LateUpdate) return;
+            
+            switch (Settings.MovementMode)
+            {
+                case MovementMode.Move:
+                    lateUpdateSystems.Add(new MovementSystem { UpdateDelay = Settings.SystemUpdateDelay });
+                    break;
+                case MovementMode.TransformRelay:
+                    lateUpdateSystems.Add(new RelaySystem { UpdateDelay = Settings.SystemUpdateDelay });
+                    break;
+            }
         }
 
         protected override void SetFixedUpdateSystems(IEcsSystems fixedUpdateSystems)
         {
-            if (Settings.HasMoveProcess && Settings.Update == UpdateType.FixedUpdate) fixedUpdateSystems.Add(new MovementSystem());
+            if (Settings.Update != UpdateType.FixedUpdate) return;
+            
+            switch (Settings.MovementMode)
+            {
+                case MovementMode.Move:
+                    fixedUpdateSystems.Add(new MovementSystem { UpdateDelay = Settings.SystemUpdateDelay });
+                    break;
+                case MovementMode.TransformRelay:
+                    fixedUpdateSystems.Add(new RelaySystem { UpdateDelay = Settings.SystemUpdateDelay });
+                    break;
+            }
         }
-        
-        public MovementGroup SetUpdateType(UpdateType updateType)
+
+        public MovementGroup SetSettings(MovementSettings settings)
         {
-            Settings.Update = updateType;
-            return this;
-        }
-        
-        public MovementGroup SetMoveProcess(bool isEnabled)
-        {
-            Settings.HasMoveProcess = isEnabled;
+            Settings = settings;
             return this;
         }
     }

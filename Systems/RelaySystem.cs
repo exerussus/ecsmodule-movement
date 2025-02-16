@@ -1,32 +1,31 @@
-﻿using Exerussus._1EasyEcs.Scripts.Core;
+﻿
+using Exerussus._1EasyEcs.Scripts.Core;
 using Exerussus.EasyEcsModules.BasicData;
 using Leopotam.EcsLite;
 using UnityEngine;
 
 namespace ECS.Modules.Exerussus.Movement.Systems
 {
-    public class MovementSystem : EasySystem<MovementPooler>
+    public class RelaySystem : EasySystem<MovementPooler>
     {
         [InjectSharedObject] private MovementSettings _movementSettings;
-        private EcsFilter _movingFilter;
+        private EcsFilter _relayFilter;
         
         protected override void Initialize()
         {
-            _movingFilter = World.Filter<MovementData.Position>().Inc<MovementData.Speed>().Inc<MovementData.Direction>().End();
+            _relayFilter = World.Filter<MovementData.Position>().Inc<UnityData.Transform>().End();
         }
 
         protected override void Update()
         {
-            foreach (var entity in _movingFilter)
+            foreach (var entity in _relayFilter)
             {
                 ref var positionData = ref Pooler.Position.Get(entity);
                 if (positionData.NextTimeUpdate > Time.time) continue;
                 positionData.NextTimeUpdate = Time.time + _movementSettings.EntityUpdateDelay;
                 
-                ref var speedData = ref Pooler.Speed.Get(entity);
-                ref var directionData = ref Pooler.Direction.Get(entity);
-                
-                positionData.Value += directionData.Value * (speedData.Value * DeltaTime);
+                ref var transformData = ref Pooler.Transform.Get(entity);
+                positionData.Value = transformData.Value.position;
             }
         }
     }
