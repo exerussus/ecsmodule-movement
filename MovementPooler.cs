@@ -21,6 +21,28 @@ namespace ECS.Modules.Exerussus.Movement
         public PoolerModule<MovementData.Direction> Direction { get; private set; }
         public PoolerModule<UnityData.Transform> Transform { get; private set; }
 
+        public void CreateBaseData(int entity)
+        {
+            Position.AddOrGet(entity);
+        }
+        
+        public void CreateBaseData(int entity, Transform transform)
+        {
+            ref var positionData = ref Position.AddOrGet(entity);
+            ref var transformData = ref Transform.AddOrGet(entity);
+            positionData.Value = transform.position;
+            transformData.Value = transform;
+        }
+        
+        public void CreateBaseData(int entity, Transform transform, Vector3 position)
+        {
+            ref var positionData = ref Position.AddOrGet(entity);
+            ref var transformData = ref Transform.AddOrGet(entity);
+            positionData.Value = position;
+            transformData.Value = transform;
+            transform.position = position;
+        }
+        
         public Vector3 GetPosition(int entity)
         {
             ref var positionData = ref Position.Get(entity);
