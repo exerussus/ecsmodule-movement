@@ -15,10 +15,6 @@ namespace ECS.Modules.Exerussus.Movement
         public MovementMode MovementMode;
         /// <summary> В каком апдейте производится работа. </summary>
         public UpdateType Update = UpdateType.FixedUpdate;
-        
-        /// <summary> Если false - не двигает позицию даже при имении Movement.Direction.
-        /// Это значит, что другая система будет определять значения позиции. </summary>
-        public bool HasMoveProcess = true;
 
         /// <summary> Насколько часто будет обновляться, либо двигаться сущность.
         /// Для корректной работы, поле
