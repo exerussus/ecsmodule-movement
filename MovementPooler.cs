@@ -59,6 +59,7 @@ namespace ECS.Modules.Exerussus.Movement
         {
             ref var transformData = ref Transform.Get(entity);
             ref var positionData = ref Position.Get(entity);
+            positionData.PrevValue = positionData.Value;
             return positionData.Value = transformData.Value.position;
         }
         

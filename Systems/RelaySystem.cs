@@ -25,6 +25,8 @@ namespace ECS.Modules.Exerussus.Movement.Systems
                 positionData.NextTimeUpdate = Time.time + _movementSettings.EntityUpdateDelay;
                 
                 ref var transformData = ref Pooler.Transform.Get(entity);
+                
+                positionData.PrevValue = positionData.Value;
                 positionData.Value = transformData.Value.position;
             }
         }

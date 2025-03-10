@@ -26,6 +26,7 @@ namespace ECS.Modules.Exerussus.Movement.Systems
                 ref var speedData = ref Pooler.Speed.Get(entity);
                 ref var directionData = ref Pooler.Direction.Get(entity);
                 
+                positionData.PrevValue = positionData.Value;
                 positionData.Value += directionData.Value * (speedData.Value * DeltaTime);
             }
         }
